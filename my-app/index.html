@@ -26,14 +26,14 @@
         <div id="project-view" class="page">
           <h1 id="project-name"></h1>
           <div class="project-buttons-grid">
-            <button class="project-grid-btn">Images</button>
+            <button class="project-grid-btn" data-page="images">Images</button>
             <button class="project-grid-btn">Train</button>
             <button class="project-grid-btn">Settings</button>
 
           </div>
         </div>
       </main>
-      
+  
       <!-- Right Sidebar -->
       <aside class="right-sidebar">
         <!-- Add Project Button -->
@@ -71,6 +71,7 @@
       const homeView = document.getElementById('home');
       const projectView = document.getElementById('project-view');
       const projectNameDisplay = document.getElementById('project-name');
+      const gridBtns = document.querySelectorAll('.project-grid-btn');
 
       // Functions to show/hide views
       // Works by adding/removing 'active' class
@@ -91,6 +92,22 @@
           e.stopPropagation();
           const projectName = btn.textContent;
           showProject(projectName);
+        });
+      });
+
+      // Grid buttons click - navigate to respective pages
+      gridBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const page = btn.getAttribute('data-page');
+          const projectName = projectNameDisplay.textContent;
+          
+          if (page) {
+            // Store project name in sessionStorage for the next page
+            sessionStorage.setItem('projectName', projectName);
+            // Redirect to the page
+            window.location.href = `${page}.html`;
+          }
         });
       });
 
