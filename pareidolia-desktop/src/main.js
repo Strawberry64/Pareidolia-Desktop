@@ -57,9 +57,13 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+
+
 // ============================================
 // FOLDER MANAGEMENT FUNCTIONS
 // ============================================
+
+
 
 /**
  * Detects the user's operating system and returns the Documents folder path.
@@ -168,6 +172,7 @@ async function getProjectsList() {
     throw error;
   }
 }
+
 
 // ============================================
 // IPC HANDLERS

@@ -1,8 +1,181 @@
-/* body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  margin: auto;
-  max-width: 38rem;
+/* Made by Alexangelo Orozco Gutierrez on January 23, 2026 */
+/* Shared CSS for all pages */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ========================= */
+/* BUTTON STYLES */
+/* ========================= */
+
+/* ADD PROJECT BUTTON STYLES */
+.add-project-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #697782;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  transition: background-color 0.2s;
+}
+
+.add-project-btn:hover {
+  background-color: #4a555c;
+}
+
+/* NAVBAR BUTTONS */
+.navbar-btn {
+  background-color: #697782;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.navbar-btn:hover {
+  background-color: #4a555c;
+}
+
+.navbar-btn:active {
+  transform: translateY(0);
+}
+
+/* MODAL BUTTONS */
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.modal-create {
+  background-color: #007acc;
+  color: white;
+}
+
+.modal-create:hover {
+  background-color: #005a9e;
+}
+
+.modal-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.modal-cancel:hover {
+  background-color: #d0d0d0;
+}
+
+/* ========================= */
+/* FORM INPUT STYLES */
+/* ========================= */
+
+.modal-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #007acc;
+  box-shadow: 0 0 5px rgba(0, 122, 204, 0.3);
+}
+
+#project-name-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+}
+
+#project-name-input:focus {
+  outline: none;
+  border-color: #007acc;
+  box-shadow: 0 0 5px rgba(0, 122, 204, 0.3);
+}
+
+/* ========================= */
+/* MODAL STYLES */
+/* ========================= */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
   padding: 2rem;
-} */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.modal-close,
+.close-btn {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-close:hover,
+.close-btn:hover {
+  color: #333;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
