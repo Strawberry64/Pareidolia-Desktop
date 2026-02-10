@@ -1,8 +1,14 @@
+/*
+  * Last modified by Aleaxngelo Orozco Gutierrez on 2-10-2026
+  * Added Python execution handler and an IPC handler for the train_model.py script
+*/
+
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import fs from 'node:fs';
 import os from 'node:os';
+import { spawn } from 'node:child_process';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -197,4 +203,127 @@ ipcMain.handle('create-project-folder', async (event, projectName) => {
  */
 ipcMain.handle('get-pareidolia-path', async () => {
   return await ensurePareidoliaFolder();
+});
+
+
+// ============================================
+// PYTHON EXECUTION HANDLERS
+// ============================================
+
+/**
+ * Executes a Python script and returns the output.
+ * @param {string} pythonPath - The path to the Python script
+ * @param {Array} args - Command line arguments to pass to the script
+ * @returns {Promise<Object>} Object with success flag, output/error, and timestamp
+ * 
+ * 
+ * This spesific function will be used in any IPC handler involving a python script.
+ * However, it is encouraged to make your own IPC handler and use this function within it instead of a
+ * general purpose IPC handler for all Python scripts due to spesific needs on the images and train pages.
+ */
+function executePythonScript(pythonPath, args = []) {
+  return new Promise((resolve) => {
+    const pythonProcess = spawn('python3', [pythonPath, ...args]);
+    
+    let output = '';
+    let error = '';
+    
+    pythonProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+    
+    pythonProcess.stderr.on('data', (data) => {
+      error += data.toString();
+    });
+    
+    pythonProcess.on('close', (code) => {
+      if (code === 0 && !error) {
+        resolve({
+          success: true,
+          output: output.trim(),
+          timestamp: new Date().toISOString()
+        });
+      } else {
+        resolve({
+          success: false,
+          error: error || `Process exited with code ${code}`,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+    
+    pythonProcess.on('error', (err) => {
+      resolve({
+        success: false,
+        error: err.message,
+        timestamp: new Date().toISOString()
+      });
+    });
+  });
+}
+
+/**
+ * Handle training model execution via IPC from renderer process
+ * @param {Object} event - IPC event
+ * @param {Object} params - Training parameters
+ * @param {string} params.projectPath - Path to the project folder
+ * @param {number} params.epochs - Number of training epochs
+ */
+ipcMain.handle('execute-train', async (event, params) => {
+  // the two parameters nessecery, more parameters are created based on the project path.
+  const { projectPath, epochs } = params;
+  
+  // Construct paths for positives, negatives, and model within the project folder
+  const positivesPath = path.join(projectPath, 'positives');
+  const negativesPath = path.join(projectPath, 'negatives');
+  const modelFolder = path.join(projectPath, 'model');
+  const modelPath = path.join(modelFolder, 'model.keras');
+  
+  // Ensure the positives directory exists
+  if (!fs.existsSync(positivesPath)) {
+    return {
+      success: false,
+      error: `Positives folder not found at: ${positivesPath}`,
+      timestamp: new Date().toISOString()
+    };
+  }
+  
+  // Ensure the negatives directory exists
+  if (!fs.existsSync(negativesPath)) {
+    return {
+      success: false,
+      error: `Negatives folder not found at: ${negativesPath}`,
+      timestamp: new Date().toISOString()
+    };
+  }
+  
+  // Ensure the model directory exists
+  if (!fs.existsSync(modelFolder)) {
+    fs.mkdirSync(modelFolder, { recursive: true });
+  }
+  
+  // Determine the correct path based on dev/production environment
+  let pythonScriptPath;
+  
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    // Development: use the root py folder
+    pythonScriptPath = path.join(__dirname, '../../py/train_model.py');
+  } else {
+    // Production: use the bundled py folder
+    pythonScriptPath = path.join(process.resourcesPath, 'py/train_model.py');
+  }
+  
+  console.log('Python script path:', pythonScriptPath);
+  console.log('Positives path:', positivesPath);
+  console.log('Negatives path:', negativesPath);
+  console.log('Model path:', modelPath);
+  console.log('Epochs:', epochs);
+  
+  // Pass positives_path, negatives_path, model_path, and epochs as arguments
+  return await executePythonScript(pythonScriptPath, [
+    positivesPath,
+    negativesPath,
+    modelPath,
+    epochs.toString()
+  ]);
 });
