@@ -57,13 +57,15 @@ trainBtn.addEventListener('click', async () => {
         const randomNumberDisplay = document.getElementById('random-number');
         
         if (result.success) {
-            randomNumberDisplay.textContent = result.output;
+            //randomNumberDisplay.textContent = result.output;
+            randomNumberDisplay.textContent = 'Training completed successfully!';
             randomNumberDisplay.style.color = '#28a745';
-            console.log('Training successful:', result);
+            console.log('Training successful:', result.output);
         } else {
-            randomNumberDisplay.textContent = `Error: ${result.error}`;
+            //randomNumberDisplay.textContent = `Error: ${result.error}`;
+            randomNumberDisplay.textContent = 'Training failed. Check console for details.';
             randomNumberDisplay.style.color = '#dc3545';
-            console.error('Training failed:', result);
+            console.error('Training failed:', result.error);
         }
     } catch (error) {
         // errr handling if for some reason Electron or Python do not run successfully
