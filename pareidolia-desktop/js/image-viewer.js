@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async() => {
 
     if(projectPath) {
         // Request images
-        const images = await window.electronAPI.invoke('get-project-images', projectPath);
+        const images = await window.electronAPI.invoke('get-project-images', projectPath + "/positives");
 
         // Loop through images and create elements
         images.forEach(imgData => {
