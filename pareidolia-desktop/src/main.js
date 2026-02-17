@@ -178,7 +178,7 @@ async function getProjectsList() {
 /**
  * Gets all images in a selected project.
  * @param {string} projectPath - the filepath to the project folder
- * @returns
+ * @returns {string<Array>} images - an array of urls to specified images
  */
 async function getProjectImages(projectPath) {
   try {
@@ -203,6 +203,7 @@ async function getProjectImages(projectPath) {
 }
 /**
  * Converts a video file into split images
+ * @param {string} projectPath - the filepath to the project
  * @returns {string} path to video file
  */
 
@@ -227,10 +228,9 @@ async function convertVideo(projectPath){
   }
 }
 /**
- * Gets all images in a selected project.
+ * Calls extract_images.py and exports images.
  * @param {string} videoPath - the filepath to the video
  * @param {string} projectPath - the filepath to the project
- * @returns
  */
 const { PythonShell } = require('python-shell');
 function runConversion(videoPath, projectPath){
