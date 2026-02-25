@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { getDatasetsList, createProjectFolder, getPareidoliaFolderPath, getVenvPath, executePythonScript } from './main.js';
+import { getDatasetsList, getModelsList, createProjectFolder, getPareidoliaFolderPath, getVenvPath, executePythonScript, getLocalIP } from './main.js';
 
 const createServer = () => {
     const app = express();
@@ -98,7 +98,8 @@ const createServer = () => {
             
             // Decode base64 and write to file
             const buffer = Buffer.from(fileData, 'base64');
-            const videoPath = path.join(datasetPath, fileName);
+            const positivesPath = path.join(datasetPath, 'positives');
+            const videoPath = path.join(positivesPath, fileName);
             fs.writeFileSync(videoPath, buffer);
             console.log('Video file saved:', videoPath);
             console.log('File size:', (buffer.length / 1024 / 1024).toFixed(2), 'MB');
@@ -108,7 +109,7 @@ const createServer = () => {
             console.log('Starting video conversion...');
             const conversionResult = await executePythonScript('py/extract_images.py', [
                 videoPath,
-                datasetPath
+                positivesPath
             ], venvPath);
             
             if (conversionResult.success) {
@@ -151,8 +152,9 @@ const createServer = () => {
     });
     
 
-    app.listen(port, () => {
-        console.log(`Express server is running on http://localhost:${port}`);
+    app.listen(port, '0.0.0.0', () => {
+        const localIP = getLocalIP();
+        console.log(`Express server is running on http://${localIP}:${port}`);
     });
 
     return app;
