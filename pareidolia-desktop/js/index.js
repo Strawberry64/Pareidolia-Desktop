@@ -97,17 +97,16 @@ async function handleAddProject() {
   try {
     const projectPath = await window.electronAPI.invoke('create-project-folder', projectName);
     console.log('Project created at:', projectPath);
-    alert(`Project "${projectName}" created successfully!`);
     
     // Reset input and close modal
     projectNameInput.value = '';
     closeAddProjectModal();
+
     
     // Reload the projects list
     await loadProjectsFromFolder();
   } catch (error) {
     console.error('Error creating project:', error);
-    alert(`Error creating project: ${error.message}`);
   }
 }
 

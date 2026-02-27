@@ -192,7 +192,6 @@ export async function createProjectFolder(projectName) {
       fs.mkdirSync(negativesPath, { recursive: true });
       console.log(`Created negatives folder at: ${negativesPath}`);
     }
-
     return projectPath;
   } catch (error) {
     console.error(`Error creating project folder: ${error.message}`);
