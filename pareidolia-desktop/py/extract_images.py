@@ -12,7 +12,7 @@ def video_to_frames(video_path, output_folder):
     video_capture = cv2.VideoCapture(video_path)
     # get fps to calculate 1/2 second intervals
     fps = video_capture.get(cv2.CAP_PROP_FPS)
-    save_interval = int (round(fps/2)) if fps > 0 else 15
+    save_interval = int (round(fps/4))
     frame_count = 0
     saved_count = 0
     video_name_f = os.path.basename(video_path)
